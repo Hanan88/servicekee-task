@@ -18,7 +18,7 @@ const style = {
 };
 
 const Home = () => {
-    const [id, setId] = useState(false);
+    const [id, setId] = useState('');
     const [open, setOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
 
@@ -48,7 +48,7 @@ const Home = () => {
     }
 
     const handleAddTicket = () => {
-        const data = { ticketName, startDate, endDate, description }
+        const data = {id: tickets.length + 1, ticketName, startDate, endDate, description }
         dispatch(addTicket(data))
     }
 
