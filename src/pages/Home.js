@@ -33,7 +33,7 @@ const Home = () => {
     const [updateDescription, setUpdateDescription] = useState('')
 
     const dispatch = useDispatch()
-    const tickets = useSelector(state => state.ticket)
+    const tickets = useSelector(state => state.ticket.ticket)
 
     const handleOpen = (id) => {
         setId(id)
@@ -63,7 +63,7 @@ const Home = () => {
 
         <div>
             <TableContainer component={Paper}>
-                <h2> We Have {DATA.length} Tickets</h2>
+                <h2> We Have {tickets.length} Tickets</h2>
                 <Table sx={{ maxWidth: '80%', margin: '0 auto' }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
@@ -75,17 +75,17 @@ const Home = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tickets.length > 0 && tickets.map((row) => (
+                        {tickets.length > 0 && tickets.map((row, index) => (
                             <TableRow
-                                key={row.id}
+                                key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    {row.ticket_name}
+                                    {row.ticketName}
                                 </TableCell>
-                                <TableCell>{row.start_date}</TableCell>
-                                <TableCell>{row.end_data}</TableCell>
-                                <TableCell>{row.description.slice(0, 100)}</TableCell>
+                                <TableCell>{row.startDate}</TableCell>
+                                <TableCell>{row.endDate}</TableCell>
+                                <TableCell>{row.description}</TableCell>
                                 <TableCell>
                                     <Button variant="text" onClick={() => handleOpen(row.id)}><DeleteIcon /></Button>
                                     <Button variant="text" onClick={() => handleForm(row.id)}><EditIcon /></Button>
@@ -97,7 +97,7 @@ const Home = () => {
                 </Table>
             </TableContainer>
 
-            {!showForm ? (<section style={{ borderBottom: '2px solid #ddd', padding: '10px 0' }}>
+            {showForm ? (<section style={{ borderBottom: '2px solid #ddd', padding: '10px 0' }}>
                 <h1>Update Your Ticket</h1>
                 <TextField id="outlined-basic" label="Please enter text" variant="outlined" onChange={(e) => setUpdateTicketName(e.target.value)} value={updateTicketName} />
                 <TextField id="outlined-basic" label="Please enter start date" variant="outlined" onChange={(e) => setUpdateStartDate(e.target.value)} value={updateStartDate} />
