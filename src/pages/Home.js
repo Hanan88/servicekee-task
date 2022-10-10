@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import DATA from './DATA.json'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, Modal, Typography, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import { addTicket, deleteTicket } from '../feature/ticket/ticketSlice'
+import EditIcon from '@mui/icons-material/Edit';
+import { addTicket, deleteTicket, updateTicket } from '../feature/ticket/ticketSlice'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -20,29 +20,45 @@ const style = {
 const Home = () => {
     const [id, setId] = useState(false);
     const [open, setOpen] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+
     const [ticketName, setTicketName] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [description, setDescription] = useState('')
+
+    const [updateTicketName, setUpdateTicketName] = useState('')
+    const [updateStartDate, setUpdateStartDate] = useState('')
+    const [updateEndDate, setUpdateEndDate] = useState('')
+    const [updateDescription, setUpdateDescription] = useState('')
+
     const dispatch = useDispatch()
     const tickets = useSelector(state => state.ticket)
+
     const handleOpen = (id) => {
         setId(id)
         setOpen(true)
     };
     const handleClose = () => setOpen(false);
+    const handleForm = () => setShowForm(true);
 
     const handleDelete = () => {
         dispatch(deleteTicket(id))
         console.log('delete', id);
     }
 
-
     const handleAddTicket = () => {
         const data = { ticketName, startDate, endDate, description }
         dispatch(addTicket(data))
     }
-    console.log(tickets, 'tickets');
+
+    const handleUpdate = () => {
+        console.log("Done");
+        const data = { updateTicketName, updateStartDate, updateEndDate, updateDescription }
+        dispatch(updateTicket(data))
+    }
+
+    console.log(tickets, 'tickets', showForm);
     return (
 
         <div>
@@ -61,8 +77,8 @@ const Home = () => {
                     <TableBody>
                         {tickets.length > 0 && tickets.map((row) => (
                             <TableRow
-                            key={row.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                key={row.id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
                                     {row.ticket_name}
@@ -72,6 +88,8 @@ const Home = () => {
                                 <TableCell>{row.description.slice(0, 100)}</TableCell>
                                 <TableCell>
                                     <Button variant="text" onClick={() => handleOpen(row.id)}><DeleteIcon /></Button>
+                                    <Button variant="text" onClick={() => handleForm(row.id)}><EditIcon /></Button>
+
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -79,12 +97,22 @@ const Home = () => {
                 </Table>
             </TableContainer>
 
+            {!showForm ? (<section style={{ borderBottom: '2px solid #ddd', padding: '10px 0' }}>
+                <h1>Update Your Ticket</h1>
+                <TextField id="outlined-basic" label="Please enter text" variant="outlined" onChange={(e) => setUpdateTicketName(e.target.value)} value={updateTicketName} />
+                <TextField id="outlined-basic" label="Please enter start date" variant="outlined" onChange={(e) => setUpdateStartDate(e.target.value)} value={updateStartDate} />
+                <TextField id="outlined-basic" label="Please enter end date" variant="outlined" onChange={(e) => setUpdateEndDate(e.target.value)} value={updateEndDate} />
+                <TextField id="outlined-basic" label="Please enter description" variant="outlined" onChange={(e) => setUpdateDescription(e.target.value)} value={updateDescription} />
+
+                <Button onClick={handleUpdate}>Update Ticket</Button>
+            </section>) : null}
+
             <section style={{ borderBottom: '2px solid #ddd', padding: '10px 0' }}>
                 <h1>Create New Ticket</h1>
-                <TextField id="outlined-basic" label="Please enter text" variant="outlined" onChange={(e) => setTicketName(e.target.value)} />
-                <TextField id="outlined-basic" label="Please enter start date" variant="outlined" onChange={(e) => setStartDate(e.target.value)} />
-                <TextField id="outlined-basic" label="Please enter end date" variant="outlined" onChange={(e) => setEndDate(e.target.value)} />
-                <TextField id="outlined-basic" label="Please enter description" variant="outlined" onChange={(e) => setDescription(e.target.value)} />
+                <TextField id="outlined-basic" label="Please enter text" variant="outlined" onChange={(e) => setTicketName(e.target.value)} value={ticketName} />
+                <TextField id="outlined-basic" label="Please enter start date" variant="outlined" onChange={(e) => setStartDate(e.target.value)} value={startDate} />
+                <TextField id="outlined-basic" label="Please enter end date" variant="outlined" onChange={(e) => setEndDate(e.target.value)} value={endDate} />
+                <TextField id="outlined-basic" label="Please enter description" variant="outlined" onChange={(e) => setDescription(e.target.value)} value={description} />
 
                 <Button onClick={handleAddTicket}>Create Ticket</Button>
             </section>
